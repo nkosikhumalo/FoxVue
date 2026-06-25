@@ -137,11 +137,19 @@ func clearTrialCookie(c *gin.Context) {
 	c.SetCookie(trialCookieName, "", -1, "/", "", true, true)
 }
 
-// realIP extracts the client IP, respecting common proxy headers.
+// realIP extracts the client IP.
+// On Azure App Service the infrastructure appends the real client IP as the
+// LAST entry in X-Forwarded-For, so we take that entry rather than the first
+// (which a client can spoof by sending their own header).
+// Falls back to RemoteAddr when no forwarded header is present.
 func realIP(c *gin.Context) string {
-	if ip := c.GetHeader("X-Forwarded-For"); ip != "" {
-		// X-Forwarded-For can be a comma-separated list; take the first
-		return strings.TrimSpace(strings.SplitN(ip, ",", 2)[0])
+	if xff := c.GetHeader("X-Forwarded-For"); xff != "" {
+		parts := strings.Split(xff, ",")
+		// Last entry is appended by the trusted Azure load-balancer
+		ip := strings.TrimSpace(parts[len(parts)-1])
+		if ip != "" {
+			return ip
+		}
 	}
 	if ip := c.GetHeader("X-Real-IP"); ip != "" {
 		return strings.TrimSpace(ip)

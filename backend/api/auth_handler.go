@@ -392,7 +392,7 @@ func hashOTP(code string) string {
 func signJWT(userID, email, name, role string) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "change-me-in-production"
+		return "", fmt.Errorf("JWT_SECRET environment variable is not set")
 	}
 	claims := jwt.MapClaims{
 		"sub":   userID,

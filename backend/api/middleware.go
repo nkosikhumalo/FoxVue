@@ -83,7 +83,7 @@ func parseBearer(c *gin.Context) (jwt.MapClaims, error) {
 func jwtSecret() string {
 	s := os.Getenv("JWT_SECRET")
 	if s == "" {
-		return "change-me-in-production"
+		panic("JWT_SECRET environment variable is not set")
 	}
 	return s
 }

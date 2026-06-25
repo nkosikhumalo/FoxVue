@@ -40,6 +40,7 @@ func (h *interviewHandler) providerForUser(userID string) (ai.Provider, bool) {
 
 // POST /api/interview/generate-questions
 func (h *interviewHandler) generateQuestions(c *gin.Context) {
+	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 32*1024) // 32 KB
 	var req models.GenerateQuestionsRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
@@ -107,6 +108,7 @@ func (h *interviewHandler) generateQuestions(c *gin.Context) {
 
 // POST /api/interview/evaluate-answer
 func (h *interviewHandler) evaluateAnswer(c *gin.Context) {
+	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 64*1024) // 64 KB
 	var req models.EvaluateAnswerRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
@@ -153,8 +155,17 @@ func (h *interviewHandler) getHistory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "missing sessionId"})
 		return
 	}
-	jobTitle, jobDesc, createdAt, err := h.sessions.GetSessionMeta(sessionID)
+
+	userID, _ := c.Get("userID")
+	uid, _ := userID.(string)
+	if uid == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "not authenticated"})
+		return
+	}
+
+	jobTitle, jobDesc, createdAt, err := h.sessions.GetSessionMetaForUser(sessionID, uid)
 	if err != nil {
+		// Return 404 regardless of whether it doesn't exist or belongs to another user
 		c.JSON(http.StatusNotFound, gin.H{"error": "session not found"})
 		return
 	}

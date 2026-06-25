@@ -36,7 +36,6 @@ func RegisterRoutes(r *gin.Engine, store storage.SessionStore, database *db.DB) 
 	r.POST("/api/auth/login", authH.login)
 	r.POST("/api/auth/forgot-password", resetH.forgotPassword)
 	r.POST("/api/auth/reset-password", resetH.resetPassword)
-	r.POST("/api/auth/test-email", testEmail) // dev only
 
 	r.GET("/api/trial/status", trialH.status)
 

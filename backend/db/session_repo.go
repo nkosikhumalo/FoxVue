@@ -183,3 +183,14 @@ func (r *SessionRepo) GetSessionMeta(sessionID string) (jobTitle, jobDesc string
 	).Scan(&jobTitle, &jobDesc, &createdAt)
 	return
 }
+
+// GetSessionMetaForUser returns session metadata only if the session belongs to userID.
+func (r *SessionRepo) GetSessionMetaForUser(sessionID, userID string) (jobTitle, jobDesc string, createdAt time.Time, err error) {
+	err = r.db.QueryRow(`
+		SELECT job_title, job_description, created_at
+		FROM interview_sessions
+		WHERE id = $1 AND user_id = $2`,
+		sessionID, userID,
+	).Scan(&jobTitle, &jobDesc, &createdAt)
+	return
+}

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -18,8 +19,15 @@ import (
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		// Allow all origins in development. Restrict in production.
-		return true
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			return false
+		}
+		allowed := os.Getenv("FRONTEND_URL")
+		if allowed == "" {
+			allowed = "http://localhost:5173"
+		}
+		return origin == allowed
 	},
 }
 

@@ -18,9 +18,15 @@ export default function Interview() {
   const [submitting, setSubmitting] = useState(false)
   const [transcribing, setTranscribing] = useState(false)
   const [autoSubmit, setAutoSubmit] = useState(false)
-  // Keep a ref to the latest transcript so handleAudioStop never reads stale state
+  // Refs so handleAudioStop always reads the latest values without stale closures
   const transcriptRef = useRef(state.finalTranscript)
   transcriptRef.current = state.finalTranscript
+  const autoSubmitRef = useRef(autoSubmit)
+  autoSubmitRef.current = autoSubmit
+  const sessionIdRef = useRef(state.sessionId)
+  sessionIdRef.current = state.sessionId
+  const currentQuestionRef = useRef(state.currentQuestion)
+  currentQuestionRef.current = state.currentQuestion
 
   const question = state.currentQuestion
   const evaluation = state.evaluation
@@ -38,13 +44,13 @@ export default function Interview() {
         dispatch({ type: 'SET_FINAL_TRANSCRIPT', transcript: combined })
 
         // If auto-submit is on, immediately evaluate after transcription
-        if (autoSubmit && state.sessionId && state.currentQuestion) {
+        if (autoSubmitRef.current && sessionIdRef.current && currentQuestionRef.current) {
           setTranscribing(false)
           setSubmitting(true)
           try {
             const result = await evaluateAnswer({
-              sessionId: state.sessionId,
-              question: state.currentQuestion,
+              sessionId: sessionIdRef.current,
+              question: currentQuestionRef.current,
               transcript: combined,
             })
             dispatch({ type: 'SET_EVALUATION', evaluation: result })
@@ -61,7 +67,7 @@ export default function Interview() {
     } finally {
       setTranscribing(false)
     }
-  }, [dispatch, autoSubmit, state.sessionId, state.currentQuestion])
+  }, [dispatch])
 
   const recorder = useMediaRecorder({ onStop: handleAudioStop })
 

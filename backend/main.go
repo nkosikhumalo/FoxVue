@@ -37,8 +37,8 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	// In-memory session store (fast access during active interviews)
-	store := storage.NewInMemorySessionStore()
+	// DB-backed session store — survives restarts and scale-out events
+	store := storage.NewSessionStore(database.DB)
 
 	api.RegisterRoutes(r, store, database)
 

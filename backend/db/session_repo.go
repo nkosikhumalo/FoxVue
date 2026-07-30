@@ -16,6 +16,18 @@ func NewSessionRepo(db *sqlx.DB) *SessionRepo {
 	return &SessionRepo{db: db}
 }
 
+// LinkSession attaches an authenticated user and job title to a session row
+// that was created by the store with a nil user_id placeholder.
+func (r *SessionRepo) LinkSession(sessionID, userID, jobTitle string) error {
+	_, err := r.db.Exec(`
+		UPDATE interview_sessions
+		SET user_id = $1, job_title = $2
+		WHERE id = $3`,
+		userID, jobTitle, sessionID,
+	)
+	return err
+}
+
 func (r *SessionRepo) CreateSession(sessionID, userID, jobTitle, jobDescription string) error {
 	_, err := r.db.Exec(`
 		INSERT INTO interview_sessions (id, user_id, job_title, job_description)

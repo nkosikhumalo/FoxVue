@@ -69,8 +69,11 @@ func (h *interviewHandler) generateQuestions(c *gin.Context) {
 	session := h.store.Create(req.JobDescription)
 
 	if uid != "" {
+		sid := session.ID
 		go func() {
-			_ = h.sessions.CreateSession(session.ID, uid, req.JobTitle, req.JobDescription)
+			// Link the session row (created by the store) to the authenticated user
+			// and set the job title — the store insert used nil user_id as a placeholder.
+			_ = h.sessions.LinkSession(sid, uid, req.JobTitle)
 			if !hasByok {
 				_ = h.quota.Increment(uid)
 			}

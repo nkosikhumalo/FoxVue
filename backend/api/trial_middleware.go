@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -130,7 +131,8 @@ func TrialMiddleware(trials *db.TrialRepo) gin.HandlerFunc {
 
 func setTrialCookie(c *gin.Context, id string) {
 	maxAge := int(trialCookieTTL.Seconds())
-	c.SetCookie(trialCookieName, id, maxAge, "/", "", true, true)
+	secure := os.Getenv("GIN_MODE") == "release"
+	c.SetCookie(trialCookieName, id, maxAge, "/", "", secure, true)
 }
 
 func clearTrialCookie(c *gin.Context) {

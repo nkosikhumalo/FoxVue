@@ -16,6 +16,7 @@ export default function Interview() {
   const [editMode, setEditMode] = useState(false)
   const [editText, setEditText] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [evaluationError, setEvaluationError] = useState('')
   const [transcribing, setTranscribing] = useState(false)
   const [autoSubmit, setAutoSubmit] = useState(false)
   // Refs so handleAudioStop always reads the latest values without stale closures
@@ -53,9 +54,12 @@ export default function Interview() {
               question: currentQuestionRef.current,
               transcript: combined,
             })
-            dispatch({ type: 'SET_EVALUATION', evaluation: result })
+            dispatch({ type: 'SET_EVALUATION', evaluation: result.evaluation ?? result.feedback ?? result })
+            setEvaluationError('')
           } catch (e) {
-            console.error('Evaluate error:', e.response?.data?.error || e.message)
+            const message = e.response?.data?.error || e.message || 'Unable to evaluate your answer.'
+            console.error('Evaluate error:', message)
+            setEvaluationError(message)
           } finally {
             setSubmitting(false)
           }
@@ -108,15 +112,16 @@ export default function Interview() {
   async function handleSubmit() {
     if (!state.sessionId || !question || !canSubmit) return
     setSubmitting(true)
+    setEvaluationError('')
     try {
       const result = await evaluateAnswer({
         sessionId: state.sessionId,
         question,
         transcript: state.finalTranscript,
       })
-      dispatch({ type: 'SET_EVALUATION', evaluation: result })
+      dispatch({ type: 'SET_EVALUATION', evaluation: result.evaluation ?? result.feedback ?? result })
     } catch (e) {
-      alert(e.response?.data?.error || 'Failed to evaluate. Please try again.')
+      setEvaluationError(e.response?.data?.error || e.message || 'Failed to evaluate. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -145,7 +150,7 @@ export default function Interview() {
   if (!state.sessionId || !question) {
     return (
       <div className="iv-page">
-        <Navbar />
+        <Navbar minimal />
         <div className="iv-body" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', flex: 1 }}>
           <div style={{ textAlign: 'center', color: 'var(--text)' }}>
             <p>No active session. Please set up an interview first.</p>
@@ -160,14 +165,14 @@ export default function Interview() {
 
   return (
     <div className="iv-page">
-      <Navbar />
+      <Navbar minimal />
       <div className="iv-mesh" aria-hidden />
 
       <div className="iv-body">
 
         <div className="iv-question-bar">
           <div className="iv-question-bar__left">
-            {question.skill && <span className="iv-badge">{question.skill}</span>}
+            {question.skill && <h2 className="iv-skill-header">{question.skill}</h2>}
             {question.category && <span className="iv-badge iv-badge--ai">{question.category}</span>}
           </div>
           <div className="iv-question-bar__right">
@@ -177,127 +182,126 @@ export default function Interview() {
           </div>
         </div>
 
-        <div className="iv-question-card">
-          <p className="iv-question-label">Question {currentIndex + 1}</p>
-          <h2 className="iv-question-text">{question.text}</h2>
-        </div>
-
         <div className="iv-main">
 
-          {/* LEFT — Recording */}
-          <div className="iv-panel iv-panel--record">
-            <div className="iv-panel__header">
-              <span className="iv-panel__title">Your Response</span>
-              <span className={`iv-timer ${isRecording ? 'iv-timer--active' : ''}`}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                </svg>
-                {formatTime(elapsed)}
-              </span>
+          {/* LEFT — Question + Your Response */}
+          <div className="iv-response-col">
+            <div className="iv-question-card">
+              <p className="iv-question-label">Question {currentIndex + 1}</p>
+              <h2 className="iv-question-text">{question.text}</h2>
             </div>
 
-            <div className="iv-viz-wrap">
-              <VoiceVisualizer isActive={isRecording} />
-            </div>
-
-            <div className="iv-record-controls">
-              {!isRecording ? (
-                <button
-                  className="iv-record-btn iv-record-btn--start"
-                  onClick={handleStartRecording}
-                  disabled={transcribing || submitting}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8" /></svg>
-                  {transcribing ? 'Transcribing...' : submitting ? 'Evaluating...' : 'Start Recording'}
-                </button>
-              ) : (
-                <button className="iv-record-btn iv-record-btn--stop" onClick={handleStopRecording}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
-                  Stop Recording
-                </button>
-              )}
-            </div>
-
-            {/* Auto-submit toggle */}
-            <label className="iv-auto-submit-toggle">
-              <input
-                type="checkbox"
-                checked={autoSubmit}
-                onChange={e => setAutoSubmit(e.target.checked)}
-                disabled={isRecording || transcribing || submitting}
-              />
-              <span>Auto-submit to AI after recording</span>
-            </label>
-
-            {/* Status indicator */}
-            {(transcribing || submitting) && (
-              <div className="iv-transcribing">
-                <span className="iv-spinner-dark" />
-                {transcribing ? 'Transcribing your answer...' : 'Evaluating with AI...'}
-              </div>
-            )}
-
-            {/* Mic error */}
-            {recorder.error && (
-              <p className="iv-warning">{recorder.error}</p>
-            )}
-
-            <div className="iv-transcript-wrap">
-              <div className="iv-transcript-header">
-                <span className="iv-transcript-label">Transcript</span>
-                <div className="iv-transcript-actions">
-                  {canSubmit && !editMode && (
-                    <button className="iv-text-btn" onClick={handleEditToggle}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Edit
-                    </button>
-                  )}
-                  {editMode && (
-                    <>
-                      <button className="iv-text-btn iv-text-btn--save" onClick={handleEditToggle}>Save</button>
-                      <button className="iv-text-btn" onClick={() => setEditMode(false)}>Cancel</button>
-                    </>
-                  )}
-                  {canSubmit && !editMode && (
-                    <button className="iv-text-btn iv-text-btn--danger" onClick={() => {
-                      dispatch({ type: 'SET_FINAL_TRANSCRIPT', transcript: '' })
-                      setElapsed(0)
-                    }}>Clear</button>
-                  )}
-                </div>
+            <div className="iv-panel iv-panel--record">
+              <div className="iv-panel__header">
+                <span className="iv-panel__title">Your Response</span>
+                <span className={`iv-timer ${isRecording ? 'iv-timer--active' : ''}`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  {formatTime(elapsed)}
+                </span>
               </div>
 
-              {editMode ? (
-                <textarea className="iv-transcript-editor" value={editText}
-                  onChange={e => setEditText(e.target.value)} rows={6} autoFocus />
-              ) : (
-                <div className="iv-transcript-box">
-                  {state.finalTranscript ? (
-                    <p className="iv-transcript-text">{state.finalTranscript}</p>
-                  ) : (
-                    <p className="iv-transcript-placeholder">
-                      {transcribing
-                        ? 'Processing your recording...'
-                        : 'Press Start Recording and speak your answer...'}
-                    </p>
-                  )}
+              <div className="iv-viz-wrap">
+                <VoiceVisualizer isActive={isRecording} />
+              </div>
+
+              <div className="iv-record-controls">
+                {!isRecording ? (
+                  <button
+                    className="iv-record-btn iv-record-btn--start"
+                    onClick={handleStartRecording}
+                    disabled={transcribing || submitting}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8" /></svg>
+                    {transcribing ? 'Transcribing...' : submitting ? 'Evaluating...' : 'Start Recording'}
+                  </button>
+                ) : (
+                  <button className="iv-record-btn iv-record-btn--stop" onClick={handleStopRecording}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
+                    Stop Recording
+                  </button>
+                )}
+              </div>
+
+              <label className="iv-auto-submit-toggle">
+                <input
+                  type="checkbox"
+                  checked={autoSubmit}
+                  onChange={e => setAutoSubmit(e.target.checked)}
+                  disabled={isRecording || transcribing || submitting}
+                />
+                <span>Auto-submit to AI after recording</span>
+              </label>
+
+              {(transcribing || submitting) && (
+                <div className="iv-transcribing">
+                  <span className="iv-spinner-dark" />
+                  {transcribing ? 'Transcribing your answer...' : 'Evaluating with AI...'}
                 </div>
               )}
-            </div>
 
-            <button className="iv-submit-btn" onClick={handleSubmit}
-              disabled={!canSubmit || submitting || editMode || !!evaluation || isBusy}>
-              {submitting
-                ? <><span className="iv-spinner" />Evaluating with AI...</>
-                : <><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>Submit Answer</>
-              }
-            </button>
+              {recorder.error && (
+                <p className="iv-warning">{recorder.error}</p>
+              )}
+
+              <div className="iv-transcript-wrap">
+                <div className="iv-transcript-header">
+                  <span className="iv-transcript-label">Transcript</span>
+                  <div className="iv-transcript-actions">
+                    {canSubmit && !editMode && (
+                      <button className="iv-text-btn" onClick={handleEditToggle}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Edit
+                      </button>
+                    )}
+                    {editMode && (
+                      <>
+                        <button className="iv-text-btn iv-text-btn--save" onClick={handleEditToggle}>Save</button>
+                        <button className="iv-text-btn" onClick={() => setEditMode(false)}>Cancel</button>
+                      </>
+                    )}
+                    {canSubmit && !editMode && (
+                      <button className="iv-text-btn iv-text-btn--danger" onClick={() => {
+                        dispatch({ type: 'SET_FINAL_TRANSCRIPT', transcript: '' })
+                        setElapsed(0)
+                      }}>Clear</button>
+                    )}
+                  </div>
+                </div>
+
+                {editMode ? (
+                  <textarea className="iv-transcript-editor" value={editText}
+                    onChange={e => setEditText(e.target.value)} rows={6} autoFocus />
+                ) : (
+                  <div className="iv-transcript-box">
+                    {state.finalTranscript ? (
+                      <p className="iv-transcript-text">{state.finalTranscript}</p>
+                    ) : (
+                      <p className="iv-transcript-placeholder">
+                        {transcribing
+                          ? 'Processing your recording...'
+                          : 'Press Start Recording and speak your answer...'}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <button className="iv-submit-btn" onClick={handleSubmit}
+                disabled={!canSubmit || submitting || editMode || !!evaluation || isBusy}>
+                {submitting
+                  ? <><span className="iv-spinner" />Evaluating with AI...</>
+                  : <><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>Submit Answer</>
+                }
+              </button>
+            </div>
           </div>
 
-          {/* RIGHT — AI Response */}
+          {/* RIGHT — AI Feedback */}
           <div className="iv-panel iv-panel--ai">
             <div className="iv-panel__header">
               <span className="iv-panel__title">AI Feedback</span>
@@ -316,7 +320,9 @@ export default function Interview() {
                     <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
                 </div>
-                <p>Record your answer and submit to get AI feedback.</p>
+                <p className={evaluationError ? 'iv-ai-empty__message--error' : ''}>
+                  {evaluationError || 'Record your answer and submit to get AI feedback.'}
+                </p>
                 <ul>
                   <li>Clarity & communication score</li>
                   <li>Technical accuracy</li>
@@ -342,21 +348,25 @@ export default function Interview() {
                   </div>
                 </div>
 
-                {evaluation.strengths?.length > 0 && (
-                  <div className="iv-ai-section">
-                    <h4>Strengths</h4>
-                    <ul className="iv-eval-list iv-eval-list--good">
-                      {evaluation.strengths.map((s, i) => <li key={i}>{s}</li>)}
-                    </ul>
-                  </div>
-                )}
+                {(evaluation.strengths?.length > 0 || evaluation.weaknesses?.length > 0) && (
+                  <div className="iv-ai-insights">
+                    {evaluation.strengths?.length > 0 && (
+                      <div className="iv-ai-section">
+                        <h4>Strengths</h4>
+                        <ul className="iv-eval-list iv-eval-list--good">
+                          {evaluation.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                        </ul>
+                      </div>
+                    )}
 
-                {evaluation.weaknesses?.length > 0 && (
-                  <div className="iv-ai-section">
-                    <h4>Areas to Improve</h4>
-                    <ul className="iv-eval-list iv-eval-list--warn">
-                      {evaluation.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
-                    </ul>
+                    {evaluation.weaknesses?.length > 0 && (
+                      <div className="iv-ai-section">
+                        <h4>Areas to Improve</h4>
+                        <ul className="iv-eval-list iv-eval-list--warn">
+                          {evaluation.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -392,9 +402,9 @@ export default function Interview() {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>
   )
 }
-

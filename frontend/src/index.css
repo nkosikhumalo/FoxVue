@@ -1,118 +1,135 @@
-/* ── FoxVue — Design System ── */
+/* ── FoxVue — Design Tokens ── */
 :root {
-  /* Brand colours */
-  --blue: #38bdf8;
-  /* sky-400 — primary accent */
-  --blue-dark: #0ea5e9;
-  /* sky-500 */
-  --blue-dim: rgba(56, 189, 248, 0.12);
-  --blue-border: rgba(56, 189, 248, 0.35);
+  --blue: #2563eb;
+  --blue-hover: #1d4ed8;
+  --blue-bg: rgba(37, 99, 235, 0.08);
+  --blue-border: rgba(37, 99, 235, 0.25);
+  --blue-dim: rgba(37, 99, 235, 0.08);
 
-  /* Neutrals — light mode */
-  --bg: #f0f4f8;
-  --bg-card: #ffffff;
-  --bg-raised: #e8edf3;
-  --text: #64748b;
-  --text-h: #0f172a;
-  --text-muted: #94a3b8;
-  --border: #cbd5e1;
-  --border-soft: #e2e8f0;
-  --code-bg: #f1f5f9;
-  --social-bg: rgba(241, 245, 249, 0.8);
+  --bg: #f9fafb;
+  --bg-card: #f1f5f9;
+  --bg-raised: #f3f4f6;
 
-  /* Semantic */
-  --accent: var(--blue);
-  --accent-bg: var(--blue-dim);
-  --accent-border: var(--blue-border);
+  --text: #374151;
+  --text-h: #111827;
+  --text-muted: #6b7280;
 
-  /* Status */
-  --green: #22c55e;
-  --red: #ef4444;
-  --yellow: #f59e0b;
+  --border: #d1d5db;
+  --border-soft: #e5e7eb;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.14), 0 4px 8px rgba(15, 23, 42, 0.08);
-  --shadow-blue: 0 4px 20px rgba(56, 189, 248, 0.25);
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
 
-  /* Typography */
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-border: #fecaca;
+
+  --yellow: #d97706;
+  --yellow-bg: #fffbeb;
+  --yellow-border: #fde68a;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 
-  font: 17px/1.65 var(--sans);
-  letter-spacing: 0.01em;
+  font-size: 16px;
+  line-height: 1.6;
+  font-family: var(--sans);
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Dark mode — default for this app ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0a0f1a;
-    --bg-card: #111827;
-    --bg-raised: #1e2535;
-    --text: #94a3b8;
-    --text-h: #f1f5f9;
-    --text-muted: #64748b;
-    --border: #1e2d3d;
-    --border-soft: #162032;
-    --code-bg: #0d1520;
-    --social-bg: rgba(30, 37, 53, 0.8);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
-  }
+:root[data-theme='dark'] {
+  --blue: #3b82f6;
+  --blue-hover: #60a5fa;
+  --blue-bg: rgba(59, 130, 246, 0.14);
+  --blue-border: rgba(96, 165, 250, 0.34);
+  --blue-dim: rgba(59, 130, 246, 0.14);
+
+  --bg: #080b12;
+  --bg-card: #111827;
+  --bg-raised: #182235;
+
+  --text: #cbd5e1;
+  --text-h: #f8fafc;
+  --text-muted: #94a3b8;
+
+  --border: #334155;
+  --border-soft: #1e293b;
+
+  --green: #4ade80;
+  --green-bg: rgba(34, 197, 94, 0.12);
+  --green-border: rgba(74, 222, 128, 0.3);
+  --red: #f87171;
+  --red-bg: rgba(239, 68, 68, 0.12);
+  --red-border: rgba(248, 113, 113, 0.3);
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(245, 158, 11, 0.12);
+  --yellow-border: rgba(251, 191, 36, 0.3);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   background: var(--bg);
+  color: var(--text);
+}
+
+body,
+#root {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
   width: 100%;
-  margin: 0;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-/* ── Typography resets ── */
+/* Typography */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--heading);
+  font-family: var(--sans);
   font-weight: 600;
   color: var(--text-h);
   margin: 0;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.25;
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-size: 2rem;
 }
 
 h2 {
-  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+  font-size: 1.5rem;
 }
 
 h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
 h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -121,17 +138,20 @@ p {
   margin: 0;
 }
 
-code {
-  font-family: var(--mono);
-  font-size: 0.85em;
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  background: var(--code-bg);
+a {
   color: var(--blue);
-  border: 1px solid var(--border-soft);
 }
 
-/* ── Scrollbar ── */
+code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+  padding: 0.2em 0.45em;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -143,46 +163,28 @@ code {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 999px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 
-/* ── Selection ── */
 ::selection {
-  background: var(--blue-dim);
+  background: rgba(37, 99, 235, 0.1);
   color: var(--text-h);
 }
 
-/* ── Mobile base ── */
 @media (max-width: 640px) {
-  :root {
-    font-size: 15px;
-  }
-
   h1 {
-    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-size: 1.6rem;
   }
 
   h2 {
-    font-size: clamp(1.2rem, 5vw, 1.5rem);
+    font-size: 1.25rem;
   }
 
-  /* Ensure all buttons are at least 44px tall for touch */
-  button {
-    min-height: 44px;
-  }
-
-  /* Prevent horizontal scroll */
   body {
     overflow-x: hidden;
-  }
-}
-
-@media (max-width: 400px) {
-  :root {
-    font-size: 14px;
   }
 }

@@ -27,7 +27,9 @@ export default function FeedbackModal({ feedback, onClose }) {
       <div
         style={{
           width: 'min(720px, 100%)',
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text)',
+          border: '1px solid var(--border)',
           borderRadius: 12,
           padding: 16,
           boxShadow: '0 10px 30px rgba(0,0,0,0.25)',

@@ -54,10 +54,10 @@ export default function Transcript({
 
       <div
         style={{
-          border: '1px solid #ddd',
+          border: '1px solid var(--border)',
           borderRadius: 8,
           padding: 12,
-          background: '#fafafa',
+          background: 'var(--bg-raised)',
         }}
       >
         <div style={{ fontWeight: 600, marginBottom: 6 }}>Interim</div>

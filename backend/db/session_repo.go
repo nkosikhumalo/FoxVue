@@ -206,3 +206,17 @@ func (r *SessionRepo) GetSessionMetaForUser(sessionID, userID string) (jobTitle,
 	).Scan(&jobTitle, &jobDesc, &createdAt)
 	return
 }
+
+// DeleteSession removes a session owned by userID. Related questions/answers cascade.
+func (r *SessionRepo) DeleteSession(sessionID, userID string) (bool, error) {
+	res, err := r.db.Exec(`
+		DELETE FROM interview_sessions
+		WHERE id = $1 AND user_id = $2`,
+		sessionID, userID,
+	)
+	if err != nil {
+		return false, err
+	}
+	n, _ := res.RowsAffected()
+	return n > 0, nil
+}

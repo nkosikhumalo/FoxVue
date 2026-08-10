@@ -184,3 +184,30 @@ func (h *interviewHandler) getHistory(c *gin.Context) {
 		"history":        history,
 	})
 }
+
+// DELETE /api/interview/sessions/:sessionId
+func (h *interviewHandler) deleteSession(c *gin.Context) {
+	sessionID := c.Param("sessionId")
+	if sessionID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing sessionId"})
+		return
+	}
+
+	userID, _ := c.Get("userID")
+	uid, ok := userID.(string)
+	if !ok || uid == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "not authenticated"})
+		return
+	}
+
+	deleted, err := h.sessions.DeleteSession(sessionID, uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete session"})
+		return
+	}
+	if !deleted {
+		c.JSON(http.StatusNotFound, gin.H{"error": "session not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"ok": true})
+}

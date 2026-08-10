@@ -72,4 +72,5 @@ func RegisterRoutes(r *gin.Engine, store storage.SessionStore, database *db.DB) 
 
 	interview.GET("/api/interview/sessions", interviewH.getAllSessions)
 	interview.GET("/api/interview/history", interviewH.getHistory)
+	interview.DELETE("/api/interview/sessions/:sessionId", interviewH.deleteSession)
 }

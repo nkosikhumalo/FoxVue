@@ -199,7 +199,11 @@ export default function ApiProviders() {
                         }
                       </button>
                     </div>
-                    <button className="ap-btn ap-btn--save" onClick={() => handleSave(p.id)} disabled={!inputs[p.id]?.trim() || saving[p.id]}>
+                    <button
+                      className={`ap-btn ap-btn--save ${saved ? 'ap-btn--save-replace' : 'ap-btn--save-new'}`}
+                      onClick={() => handleSave(p.id)}
+                      disabled={!inputs[p.id]?.trim() || saving[p.id]}
+                    >
                       {saving[p.id] ? <><span className="ap-spinner-sm" />Saving...</> : saved ? 'Replace' : 'Save Key'}
                     </button>
                   </div>

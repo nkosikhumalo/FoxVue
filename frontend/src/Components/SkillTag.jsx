@@ -7,8 +7,9 @@ export default function SkillTag({ label }) {
         display: 'inline-block',
         padding: '6px 10px',
         borderRadius: 999,
-        border: '1px solid #e5e7eb',
-        background: '#f9fafb',
+        border: '1px solid var(--border)',
+        background: 'var(--bg-raised)',
+        color: 'var(--text)',
         fontSize: 12,
       }}
     >
@@ -16,4 +17,3 @@ export default function SkillTag({ label }) {
     </span>
   )
 }
-

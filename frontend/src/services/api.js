@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const BASE = import.meta.env.VITE_API_BASE_URL || 'https://foxvue-backend-gnddgbgcazgtg5dn.southafricanorth-01.azurewebsites.net'
-
+// const BASE = import.meta.env.VITE_API_BASE_URL || 'https://foxvue-backend-gnddgbgcazgtg5dn.southafricanorth-01.azurewebsites.net'
+const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 // ── Axios instance with automatic JWT injection ───────────────────────────────
 const api = axios.create({ baseURL: BASE })
 
@@ -102,6 +102,10 @@ export function fetchHistory(sessionId) {
 
 export function fetchAllSessions() {
   return api.get('/api/interview/sessions').then((r) => r.data.sessions)
+}
+
+export function deleteSession(sessionId) {
+  return api.delete(`/api/interview/sessions/${sessionId}`).then((r) => r.data)
 }
 
 // ── API Key management (BYOK) ─────────────────────────────────────────────────

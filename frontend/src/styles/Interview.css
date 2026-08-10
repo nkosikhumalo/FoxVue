@@ -1,64 +1,71 @@
 .iv-page {
-    min-height: 100svh;
+    height: 100svh;
+    max-height: 100svh;
     display: flex;
     flex-direction: column;
     background: var(--bg);
-    text-align: left;
+    overflow: hidden;
 }
 
 .iv-mesh {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(ellipse 50% 40% at 0% 30%, rgba(56, 189, 248, 0.06), transparent 55%),
-        radial-gradient(ellipse 40% 35% at 100% 70%, rgba(14, 165, 233, 0.05), transparent 50%);
+    display: none;
 }
 
 .iv-body {
-    position: relative;
-    z-index: 1;
     flex: 1;
+    min-height: 0;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 3vw, 2.5rem);
+    padding: 0.65rem 1.5rem 0.85rem;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.55rem;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-/* Question bar */
 .iv-question-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
 .iv-question-bar__left,
 .iv-question-bar__right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
+}
+
+.iv-skill-header {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1.2;
 }
 
 .iv-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.92rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 0.28rem 0.7rem;
-    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
     border: 1px solid var(--border);
-    background: var(--bg-raised);
+    background: var(--bg-card);
     color: var(--text-muted);
 }
 
@@ -71,213 +78,215 @@
 .iv-btn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 0.4rem 0.85rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text);
+    gap: 4px;
+    padding: 0.3rem 0.65rem;
+    border-radius: 5px;
+    border: 1px solid #cbd5e1;
+    background: #e2e8f0;
+    color: #334155;
     font: inherit;
-    font-size: 0.98rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .iv-btn:hover {
-    background: var(--bg-raised);
-    color: var(--text-h);
-    border-color: var(--blue-border);
+    background: #cbd5e1;
+    color: #0f172a;
 }
 
-/* Question card */
 .iv-question-card {
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    border: 1px solid #0f172a;
     border-left: 3px solid var(--blue);
-    border-radius: 14px;
-    padding: 1.4rem 1.75rem;
-    box-shadow: var(--shadow);
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
 }
 
 .iv-question-label {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 0.68rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--blue);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.2rem;
 }
 
 .iv-question-text {
     margin: 0;
-    font-size: clamp(1rem, 2.2vw, 1.25rem);
-    line-height: 1.55;
+    font-size: 0.95rem;
+    line-height: 1.45;
     color: var(--text-h);
     font-weight: 500;
 }
 
-/* Two-column */
 .iv-main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    align-items: start;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 0.65rem;
+    align-items: stretch;
     flex: 1;
+    min-height: 0;
 }
 
-@media (max-width: 860px) {
+.iv-response-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.iv-response-col .iv-panel--record {
+    flex: 1;
+    min-height: 0;
+    padding: 0.55rem 0.75rem;
+    gap: 0.4rem;
+}
+
+@media (max-width: 900px) {
+    .iv-page {
+        height: auto;
+        max-height: none;
+        overflow: auto;
+    }
+
     .iv-main {
         grid-template-columns: 1fr;
+        flex: none;
+    }
+
+    .iv-response-col {
+        overflow: visible;
     }
 }
 
-/* Panels */
 .iv-panel {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.75rem;
+    border: 1px solid #0f172a;
+    border-radius: 6px;
+    padding: 0.75rem 0.9rem;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    box-shadow: var(--shadow);
-    min-height: 560px;
+    gap: 0.5rem;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .iv-panel__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .iv-panel__title {
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
+    letter-spacing: 0.07em;
+    color: #0f172a;
 }
 
-/* Timer */
 .iv-timer {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 1rem;
-    font-weight: 700;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
-    transition: color 0.3s;
 }
 
 .iv-timer--active {
     color: var(--red);
 }
 
-/* Visualizer */
 .iv-viz-wrap {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0;
+    flex-shrink: 0;
 }
 
-/* Record controls */
 .iv-record-controls {
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .iv-record-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 0.85rem 2rem;
-    border-radius: 999px;
+    gap: 8px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
     border: none;
     font: inherit;
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 0.875rem;
     cursor: pointer;
     width: 100%;
-    max-width: 260px;
-    transition: transform 0.15s, box-shadow 0.2s, filter 0.15s;
-    letter-spacing: 0.01em;
+    max-width: 220px;
+    transition: background 0.15s, opacity 0.15s;
 }
 
 .iv-record-btn--start {
-    background: var(--blue);
-    color: #0a0f1a;
-    box-shadow: var(--shadow-blue);
+    background: #0f172a;
+    color: #fff;
 }
 
 .iv-record-btn--start:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(56, 189, 248, 0.45);
+    background: #020617;
 }
 
 .iv-record-btn--stop {
     background: var(--red);
-    color: white;
-    box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
-    animation: iv-pulse-red 1.4s ease-in-out infinite;
+    color: #fff;
 }
 
 .iv-record-btn--stop:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-    animation: none;
-}
-
-@keyframes iv-pulse-red {
-
-    0%,
-    100% {
-        box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
-    }
-
-    50% {
-        box-shadow: 0 4px 30px rgba(239, 68, 68, 0.65);
-    }
+    opacity: 0.88;
 }
 
 .iv-record-btn:disabled {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
-    transform: none;
 }
 
 .iv-warning {
-    font-size: 0.98rem;
+    font-size: 0.8rem;
     color: var(--yellow);
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    border-radius: 8px;
-    padding: 0.6rem 0.9rem;
+    background: var(--yellow-bg);
+    border: 1px solid var(--yellow-border);
+    border-radius: 5px;
+    padding: 0.4rem 0.7rem;
     text-align: center;
     margin: 0;
+    flex-shrink: 0;
 }
 
-/* Auto-submit toggle */
 .iv-auto-submit-toggle {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.98rem;
-    font-weight: 600;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
     color: var(--text);
     cursor: pointer;
     user-select: none;
-    padding: 0.4rem 0;
+    padding: 0;
+    flex-shrink: 0;
 }
 
 .iv-auto-submit-toggle input {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     accent-color: var(--blue);
     cursor: pointer;
     flex-shrink: 0;
@@ -288,103 +297,112 @@
     opacity: 0.5;
 }
 
-/* Transcript */
 .iv-transcript-wrap {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.35rem;
     flex: 1;
+    min-height: 0;
 }
 
 .iv-transcript-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
 }
 
 .iv-transcript-label {
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: 0.68rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    color: #0f172a;
 }
 
 .iv-transcript-actions {
     display: flex;
-    gap: 5px;
+    gap: 4px;
 }
 
 .iv-text-btn {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     font: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    padding: 0.22rem 0.55rem;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid #cbd5e1;
+    background: #e2e8f0;
+    color: #334155;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
 }
 
 .iv-text-btn:hover {
-    background: var(--bg-raised);
-    color: var(--text-h);
+    background: #cbd5e1;
+    color: #0f172a;
 }
 
 .iv-text-btn--save {
-    color: var(--green);
-    border-color: rgba(34, 197, 94, 0.35);
+    color: #334155;
+    border-color: #cbd5e1;
 }
 
 .iv-text-btn--save:hover {
-    background: rgba(34, 197, 94, 0.08);
+    background: #cbd5e1;
+    color: #0f172a;
 }
 
 .iv-text-btn--danger {
-    color: var(--red);
-    border-color: rgba(239, 68, 68, 0.3);
+    color: #334155;
+    border-color: #cbd5e1;
 }
 
 .iv-text-btn--danger:hover {
-    background: rgba(239, 68, 68, 0.08);
+    background: #cbd5e1;
+    color: #0f172a;
 }
 
 .iv-transcript-box {
     flex: 1;
-    min-height: 120px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
+    min-height: 0;
+    border: 1px solid #0f172a;
+    border-radius: 5px;
+    padding: 0.55rem 0.7rem;
     background: var(--bg-raised);
     overflow-y: auto;
 }
 
 .iv-transcript-editor {
     width: 100%;
-    box-sizing: border-box;
-    min-height: 120px;
-    border: 1px solid var(--blue);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
+    flex: 1;
+    min-height: 0;
+    border: 1px solid #0f172a;
+    border-radius: 5px;
+    padding: 0.55rem 0.7rem;
     background: var(--bg-card);
     color: var(--text-h);
     font: inherit;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    resize: vertical;
-    box-shadow: 0 0 0 3px var(--blue-dim);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    resize: none;
+    box-shadow: none;
     outline: none;
+    box-sizing: border-box;
+}
+
+.iv-transcript-editor:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.12);
 }
 
 .iv-transcript-text {
     margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.7;
+    font-size: 0.85rem;
+    line-height: 1.5;
     color: var(--text-h);
 }
 
@@ -396,48 +414,50 @@
 
 .iv-transcript-placeholder {
     margin: 0;
-    font-size: 0.92rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     font-style: italic;
 }
 
-/* Submit */
-.iv-submit-btn {
+.iv-submit-btn,
+.iv-next-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 0.82rem 1rem;
+    gap: 6px;
+    padding: 0.5rem 0.85rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 6px;
     font: inherit;
-    font-weight: 700;
-    font-size: 0.98rem;
+    font-weight: 600;
+    font-size: 0.875rem;
     cursor: pointer;
-    color: #0a0f1a;
-    background: var(--blue);
-    box-shadow: var(--shadow-blue);
-    transition: transform 0.15s, box-shadow 0.2s, filter 0.15s;
-    letter-spacing: 0.01em;
+    color: #2563eb;
+    background: #0f172a;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
 }
 
-.iv-submit-btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-    filter: brightness(1.08);
-    box-shadow: 0 6px 28px rgba(56, 189, 248, 0.4);
+.iv-submit-btn:hover:not(:disabled),
+.iv-next-btn:hover {
+    background: #020617;
+    color: #3b82f6;
 }
 
 .iv-submit-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
-    transform: none;
+}
+
+.iv-next-btn {
+    margin-top: auto;
 }
 
 .iv-spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(10, 15, 26, 0.25);
-    border-top-color: #0a0f1a;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(37, 99, 235, 0.35);
+    border-top-color: #2563eb;
     border-radius: 50%;
     animation: iv-spin 0.7s linear infinite;
     flex-shrink: 0;
@@ -449,23 +469,23 @@
     }
 }
 
-/* Transcribing indicator */
 .iv-transcribing {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.98rem;
-    font-weight: 600;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
     color: var(--blue);
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 5px;
     background: var(--blue-dim);
     border: 1px solid var(--blue-border);
+    flex-shrink: 0;
 }
 
 .iv-spinner-dark {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
     border: 2px solid var(--blue-border);
     border-top-color: var(--blue);
     border-radius: 50%;
@@ -473,49 +493,57 @@
     flex-shrink: 0;
 }
 
-/* Progress */
 .iv-progress {
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--text-muted);
-    background: var(--bg-raised);
+    background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.22rem 0.7rem;
-    letter-spacing: 0.03em;
+    border-radius: 4px;
+    padding: 0.2rem 0.55rem;
 }
 
-/* AI panel */
 .iv-ai-empty {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 1rem;
-    padding: 2rem;
-    color: var(--text);
+    gap: 0.55rem;
+    padding: 0.75rem;
+    color: #0f172a;
+    overflow: auto;
 }
 
 .iv-ai-empty__icon {
-    width: 72px;
-    height: 72px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--blue-dim);
-    border: 1px solid var(--blue-border);
+    background: #0f172a;
+    border: 1px solid #0f172a;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--blue);
-    opacity: 0.8;
+    color: #2563eb;
+}
+
+.iv-ai-empty__icon svg {
+    width: 22px;
+    height: 22px;
 }
 
 .iv-ai-empty p {
-    font-size: 1.05rem;
-    max-width: 26ch;
-    line-height: 1.55;
-    color: var(--text);
+    font-size: 0.85rem;
+    max-width: 28ch;
+    line-height: 1.4;
+    margin: 0;
+    color: #0f172a;
+}
+
+.iv-ai-empty__message--error {
+    color: var(--red);
 }
 
 .iv-ai-empty ul {
@@ -524,46 +552,48 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.2rem;
     text-align: left;
 }
 
 .iv-ai-empty li {
-    font-size: 0.98rem;
-    padding-left: 1.2rem;
+    font-size: 0.8rem;
+    padding-left: 1.1rem;
     position: relative;
-    color: var(--text);
+    color: #0f172a;
 }
 
 .iv-ai-empty li::before {
     content: '✓';
     position: absolute;
     left: 0;
-    color: var(--blue);
-    font-weight: 700;
+    color: #2563eb;
+    font-weight: 600;
 }
 
-/* AI response */
 .iv-ai-response {
     display: flex;
     flex-direction: column;
-    gap: 1.1rem;
+    gap: 0.55rem;
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .iv-ai-score-row {
     display: flex;
     align-items: center;
-    gap: 1.1rem;
-    padding: 1.1rem;
-    border-radius: 12px;
+    gap: 0.75rem;
+    padding: 0.65rem;
+    border-radius: 6px;
     background: var(--bg-raised);
     border: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .iv-score-circle {
-    width: 76px;
-    height: 76px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
@@ -575,44 +605,45 @@
 
 .iv-score-circle--high {
     border-color: var(--green);
-    background: rgba(34, 197, 94, 0.1);
+    background: var(--green-bg);
     color: var(--green);
 }
 
 .iv-score-circle--medium {
     border-color: var(--yellow);
-    background: rgba(245, 158, 11, 0.1);
+    background: var(--yellow-bg);
     color: var(--yellow);
 }
 
 .iv-score-circle--low {
     border-color: var(--red);
-    background: rgba(239, 68, 68, 0.1);
+    background: var(--red-bg);
     color: var(--red);
 }
 
 .iv-score-num {
-    font-size: 1.6rem;
-    font-weight: 800;
+    font-size: 1.15rem;
+    font-weight: 700;
     line-height: 1;
 }
 
 .iv-score-sub {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
     opacity: 0.7;
 }
 
 .iv-score-meta {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.2rem;
+    min-width: 0;
 }
 
 .iv-score-breakdown {
     display: flex;
-    flex-direction: column;
-    gap: 0.18rem;
-    font-size: 1.05rem;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    font-size: 0.8rem;
     color: var(--text);
 }
 
@@ -622,67 +653,69 @@
 
 .iv-score-desc {
     margin: 0;
-    font-size: 0.98rem;
+    font-size: 0.8rem;
     color: var(--text);
-    line-height: 1.45;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .iv-score-badge {
-    font-size: 0.92rem;
-    font-weight: 700;
-    padding: 0.22rem 0.6rem;
-    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
 }
 
 .iv-score-badge--high {
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
     color: var(--green);
 }
 
 .iv-score-badge--medium {
-    background: rgba(245, 158, 11, 0.12);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: var(--yellow-bg);
+    border: 1px solid var(--yellow-border);
     color: var(--yellow);
 }
 
 .iv-score-badge--low {
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
     color: var(--red);
 }
 
 .iv-ai-section h4 {
-    margin: 0 0 0.45rem;
-    font-size: 0.92rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--text-muted);
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    color: #0f172a;
 }
 
 .iv-ai-section p {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.65;
+    font-size: 0.8rem;
+    line-height: 1.45;
     color: var(--text-h);
-    padding: 0.85rem 1rem;
+    padding: 0.5rem 0.65rem;
     background: var(--bg-raised);
-    border-radius: 8px;
+    border-radius: 5px;
     border: 1px solid var(--border);
 }
 
 .iv-eval-list {
     margin: 0;
-    padding-left: 1.1rem;
+    padding-left: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.15rem;
 }
 
 .iv-eval-list li {
-    font-size: 0.92rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.4;
 }
 
 .iv-eval-list--good li {
@@ -696,162 +729,292 @@
 .iv-filler-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 4px;
 }
 
 .iv-filler-tag {
-    font-size: 0.92rem;
-    font-weight: 600;
-    padding: 0.2rem 0.55rem;
-    border-radius: 999px;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.22);
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
     color: var(--red);
 }
 
 .iv-followup {
-    padding: 0.9rem 1rem;
-    border-radius: 10px;
-    background: var(--blue-dim);
-    border: 1px solid var(--blue-border);
+    padding: 0.55rem 0.7rem;
+    border-radius: 5px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
 }
 
 .iv-followup__label {
     display: block;
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 0.68rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.06em;
     color: var(--blue);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.2rem;
 }
 
 .iv-followup__text {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.55;
+    font-size: 0.85rem;
+    line-height: 1.4;
     color: var(--text-h);
     font-style: italic;
 }
 
-.iv-next-btn {
-    display: flex;
+/* ── Dark theme ── */
+html[data-theme='dark'] .iv-page { background: var(--bg); }
+html[data-theme='dark'] .iv-skill-header,
+html[data-theme='dark'] .iv-panel__title,
+html[data-theme='dark'] .iv-transcript-label,
+html[data-theme='dark'] .iv-ai-empty p,
+html[data-theme='dark'] .iv-ai-empty li,
+html[data-theme='dark'] .iv-ai-section h4,
+html[data-theme='dark'] .iv-followup__text { color: var(--text-h); }
+
+html[data-theme='dark'] .iv-question-card,
+html[data-theme='dark'] .iv-panel,
+html[data-theme='dark'] .iv-transcript-box,
+html[data-theme='dark'] .iv-ai-empty,
+html[data-theme='dark'] .iv-score-breakdown,
+html[data-theme='dark'] .iv-followup {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+html[data-theme='dark'] .iv-question-card { border-left-color: var(--blue); }
+html[data-theme='dark'] .iv-btn,
+html[data-theme='dark'] .iv-text-btn {
+    background: var(--bg-raised);
+    border-color: var(--border);
+    color: var(--text);
+}
+html[data-theme='dark'] .iv-btn:hover,
+html[data-theme='dark'] .iv-text-btn:hover,
+html[data-theme='dark'] .iv-text-btn--save:hover,
+html[data-theme='dark'] .iv-text-btn--danger:hover { background: #24324a; color: var(--text-h); }
+
+html[data-theme='dark'] .iv-transcript-editor { background: var(--bg-raised); border-color: var(--border); color: var(--text-h); }
+html[data-theme='dark'] .iv-transcript-text,
+html[data-theme='dark'] .iv-score-desc,
+html[data-theme='dark'] .iv-ai-section p { color: var(--text); }
+html[data-theme='dark'] .iv-submit-btn,
+html[data-theme='dark'] .iv-next-btn { background: #1e3a8a; color: #fff; }
+html[data-theme='dark'] .iv-submit-btn:hover:not(:disabled),
+html[data-theme='dark'] .iv-next-btn:hover { background: #1d4ed8; color: #fff; }
+html[data-theme='dark'] .iv-ai-empty__icon { background: var(--blue-bg); border-color: var(--blue-border); }
+html[data-theme='dark'] .iv-record-btn--start { background: #1d4ed8; }
+html[data-theme='dark'] .iv-record-btn--start:hover:not(:disabled) { background: #2563eb; }
+html[data-theme='dark'] .iv-record-btn--stop { background: #b91c1c; }
+html[data-theme='dark'] .iv-record-btn--stop:hover { background: #dc2626; }
+
+/* ── Compact desktop workspace ── */
+@media (min-width: 901px) {
+    .iv-body {
+        max-width: 1500px;
+        padding: 0.35rem 2rem 0.9rem;
+        gap: 0.8rem;
+    }
+
+    .iv-question-bar { min-height: 36px; }
+
+    .iv-main {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .iv-question-card,
+    .iv-panel {
+        border-radius: 14px;
+        border-color: var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .iv-question-card { padding: 0.9rem 1.1rem; }
+    .iv-question-text { font-size: 1.05rem; line-height: 1.45; }
+
+    .iv-panel { padding: 1rem 1.1rem; gap: 0.7rem; }
+    .iv-panel__header { padding-bottom: 0.65rem; }
+    .iv-panel__title,
+    .iv-transcript-label { font-size: 0.78rem; }
+
+    .iv-response-col .iv-panel--record { padding: 1rem 1.1rem; gap: 0.65rem; }
+    .iv-viz-wrap { height: 74px; }
+    .iv-viz-wrap .voice-viz { transform: scale(0.76); }
+    .iv-record-btn { max-width: none; padding: 0.65rem 1.25rem; font-size: 0.95rem; }
+    .iv-auto-submit-toggle { font-size: 0.85rem; }
+
+    .iv-transcript-text,
+    .iv-transcript-editor { font-size: 0.95rem; line-height: 1.55; }
+    .iv-transcript-placeholder { font-size: 0.9rem; }
+    .iv-submit-btn,
+    .iv-next-btn { min-height: 42px; font-size: 0.95rem; }
+
+    .iv-panel--ai { min-height: 0; }
+    .iv-ai-empty { gap: 0.8rem; }
+    .iv-ai-empty p { font-size: 1rem; max-width: 32ch; }
+    .iv-ai-empty li { font-size: 0.9rem; }
+
+    .iv-ai-response {
+        gap: 0.8rem;
+        overflow: hidden;
+    }
+
+    .iv-ai-score-row { padding: 0.85rem 0.95rem; gap: 1rem; border-radius: 10px; }
+    .iv-score-circle { width: 66px; height: 66px; }
+    .iv-score-num { font-size: 1.55rem; }
+    .iv-score-sub { font-size: 0.68rem; }
+    .iv-score-breakdown { font-size: 0.9rem; gap: 0.3rem 0.8rem; }
+    .iv-score-desc { font-size: 0.9rem; line-height: 1.45; }
+
+    .iv-ai-insights {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .iv-ai-section {
+        min-width: 0;
+        padding: 0.7rem 0.8rem;
+        background: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+    }
+
+    .iv-ai-section h4 { font-size: 0.82rem; margin-bottom: 0.35rem; }
+    .iv-eval-list { padding-left: 1.1rem; gap: 0.25rem; }
+    .iv-eval-list li { font-size: 0.9rem; line-height: 1.35; }
+    .iv-ai-section p { font-size: 0.9rem; line-height: 1.45; }
+    .iv-followup { padding: 0.7rem 0.85rem; border-radius: 10px; }
+    .iv-followup__text { font-size: 0.95rem; }
+}
+
+@media (max-height: 760px) and (min-width: 901px) {
+    .iv-body { padding-top: 0.55rem; padding-bottom: 0.6rem; gap: 0.45rem; }
+    .iv-question-card { padding: 0.65rem 0.9rem; }
+    .iv-question-text { font-size: 0.95rem; }
+    .iv-panel { padding: 0.7rem 0.85rem; gap: 0.45rem; }
+    .iv-viz-wrap { height: 54px; }
+    .iv-viz-wrap .voice-viz { transform: scale(0.62); }
+    .iv-ai-response { gap: 0.5rem; }
+    .iv-ai-score-row { padding: 0.55rem 0.7rem; }
+    .iv-score-circle { width: 54px; height: 54px; }
+    .iv-ai-section { padding: 0.5rem 0.65rem; }
+    .iv-eval-list li,
+    .iv-ai-section p { font-size: 0.82rem; }
+}
+
+/* ── Interview question bubble ── */
+.iv-question-card {
+    position: relative;
+    overflow: visible;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 4px solid var(--blue);
+    border-radius: 18px 18px 18px 5px;
+    padding: 1rem 1.2rem 1.05rem;
+    box-shadow: 0 8px 20px -14px rgba(37, 99, 235, 0.5);
+}
+
+.iv-question-card::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 20px;
+    width: 16px;
+    height: 16px;
+    background: #eff6ff;
+    border-right: 1px solid #bfdbfe;
+    border-bottom: 1px solid #bfdbfe;
+    transform: rotate(45deg);
+}
+
+.iv-question-label {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0.82rem 1rem;
-    border: none;
-    border-radius: 10px;
-    font: inherit;
-    font-weight: 700;
-    font-size: 0.98rem;
-    cursor: pointer;
-    color: #0a0f1a;
-    background: var(--blue);
-    box-shadow: var(--shadow-blue);
-    transition: transform 0.15s, box-shadow 0.2s, filter 0.15s;
-    margin-top: auto;
-    letter-spacing: 0.01em;
+    padding: 0.22rem 0.55rem;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.72rem;
 }
 
-.iv-next-btn:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.08);
-    box-shadow: 0 6px 28px rgba(56, 189, 248, 0.4);
+.iv-question-text {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.55rem;
+    color: #0f172a;
+    font-size: clamp(1rem, 1.25vw, 1.2rem);
+    font-weight: 650;
+    line-height: 1.45;
 }
 
-/* ── Responsive ── */
-@media (max-width: 860px) {
+html[data-theme='dark'] .iv-question-card {
+    background: #15213a;
+    border-color: #31527e;
+    border-left-color: #60a5fa;
+    box-shadow: none;
+}
+
+html[data-theme='dark'] .iv-question-card::after {
+    background: #15213a;
+    border-color: #31527e;
+}
+
+html[data-theme='dark'] .iv-question-label {
+    background: #1e3a5f;
+    color: #93c5fd;
+}
+
+html[data-theme='dark'] .iv-question-text { color: #f8fafc; }
+
+@media (max-width: 900px) {
     .iv-panel {
         min-height: unset;
-        padding: 1.25rem;
+        padding: 1rem;
+        overflow: visible;
+    }
+
+    .iv-body {
+        overflow: visible;
+        min-height: auto;
     }
 
     .iv-question-card {
-        padding: 1rem 1.25rem;
+        padding: 0.75rem 1rem;
     }
 }
 
 @media (max-width: 640px) {
     .iv-body {
-        padding: 0.75rem;
-        gap: 0.85rem;
-    }
-
-    .iv-question-bar {
-        gap: 6px;
-    }
-
-    .iv-question-bar__right {
-        gap: 5px;
-    }
-
-    .iv-btn {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.82rem;
+        padding: 0.75rem 1rem 1rem;
+        gap: 0.65rem;
     }
 
     .iv-btn span {
         display: none;
     }
 
-    .iv-progress {
-        font-size: 0.78rem;
-        padding: 0.18rem 0.55rem;
-    }
-
-    .iv-question-card {
-        padding: 0.9rem 1rem;
-    }
-
-    .iv-question-text {
-        font-size: 1rem;
-    }
-
-    .iv-panel {
-        padding: 1rem;
-        gap: 1rem;
-    }
-
     .iv-record-btn {
         max-width: 100%;
-        font-size: 0.92rem;
-        padding: 0.8rem 1.5rem;
-    }
-
-    .iv-transcript-box {
-        min-height: 90px;
-    }
-
-    .iv-ai-score-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.85rem;
-    }
-
-    .iv-score-circle {
-        width: 64px;
-        height: 64px;
-    }
-
-    .iv-score-num {
-        font-size: 1.3rem;
     }
 
     .iv-transcript-editor {
         font-size: 16px;
     }
 
-    /* prevent iOS zoom */
-}
-
-@media (max-width: 400px) {
-    .iv-badge {
-        font-size: 0.72rem;
-        padding: 0.2rem 0.5rem;
+    .iv-question-text {
+        font-size: 0.9rem;
     }
 
-    .iv-panel__title {
-        font-size: 0.78rem;
+    .iv-ai-score-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

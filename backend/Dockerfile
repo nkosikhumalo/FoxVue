@@ -1,20 +1,12 @@
-# Use the official Golang image
-FROM golang:1.25-alpine
-
-# Set the working directory
+FROM golang:1.22-alpine AS builder
 WORKDIR /app
-
-# Copy the source code
-COPY . .
-
-# Download dependencies
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o server .
 
-# Build the app
-RUN go build -o main .
-
-# Expose the port your Gin server uses
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/server .
 EXPOSE 8080
-
-# Start the application
-CMD ["./main"]
+CMD ["./server"]

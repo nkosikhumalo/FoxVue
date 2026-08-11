@@ -1,11 +1,12 @@
-FROM node:20-alpine AS builder
+FROM golang:1.25-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
-RUN npm run build
+RUN CGO_ENABLED=0 GOOS=linux go build -o server .
 
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/server .
+EXPOSE 8080
+CMD ["./server"]

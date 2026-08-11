@@ -19,6 +19,11 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Ensure Go modules are tidy
+        run: |
+          cd backend
+          go mod tidy
+
       - name: Run Go Tests
         run: |
           cd backend

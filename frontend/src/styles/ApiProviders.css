@@ -308,17 +308,17 @@ html[data-theme='dark'] .ap-page select { background: var(--bg-raised); color: v
     cursor: not-allowed;
 }
 
-/* No key saved yet — default state (nothing typed): white bg, black text */
+/* No key saved yet — default state (nothing typed): light blue bg, black text */
 .ap-btn--save-new {
     color: #000000 !important;
-    background: #ffffff !important;
-    border-color: #111827 !important;
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
 }
 
 .ap-btn--save-new:disabled {
     opacity: 1 !important;
     color: #000000 !important;
-    background: #ffffff !important;
+    background: #eff6ff !important;
     cursor: not-allowed;
 }
 

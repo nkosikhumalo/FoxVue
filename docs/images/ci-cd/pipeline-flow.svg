@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 120" role="img" aria-label="Animated CI CD pipeline flow">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2088FF">
+        <animate attributeName="stop-color" values="#2088FF;#0D9488;#2088FF" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#0D9488">
+        <animate attributeName="stop-color" values="#0D9488;#F59E0B;#0D9488" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#F59E0B">
+        <animate attributeName="stop-color" values="#F59E0B;#E85D4C;#F59E0B" dur="4s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="120" rx="16" fill="#0F1C1A"/>
+  <path d="M40 60 H680" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="14 10">
+    <animate attributeName="stroke-dashoffset" from="0" to="-48" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F3F7F4" text-anchor="middle">
+    <circle cx="90" cy="60" r="22" fill="#2088FF">
+      <animate attributeName="r" values="20;24;20" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="90" y="64">Push</text>
+    <circle cx="250" cy="60" r="22" fill="#0D9488">
+      <animate attributeName="r" values="20;24;20" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+    <text x="250" y="64">Test</text>
+    <circle cx="410" cy="60" r="22" fill="#F59E0B">
+      <animate attributeName="r" values="20;24;20" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+    </circle>
+    <text x="410" y="64">Build</text>
+    <circle cx="570" cy="60" r="22" fill="#E85D4C">
+      <animate attributeName="r" values="20;24;20" dur="2s" begin="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <text x="570" y="64">Ship</text>
+  </g>
+</svg>

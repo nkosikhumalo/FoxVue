@@ -8,6 +8,7 @@ import '../styles/Setup.css'
 const MIN_CHARS = 50
 const MIN_WORDS = 8
 
+const GENERATION_ERROR = "We couldn't generate questions right now. Please try again."
 const PRESETS = [
   {
     label: 'Frontend Engineer',
@@ -113,6 +114,10 @@ export default function Setup() {
 
       const data = await generateQuestions(null, jobTitle.trim(), jobDesc.trim())
 
+      if (!data?.sessionId || !Array.isArray(data.questions) || data.questions.length === 0) {
+        throw new Error(GENERATION_ERROR)
+      }
+
       dispatch({
         type: 'START_SESSION',
         sessionId: data.sessionId,
@@ -130,8 +135,7 @@ export default function Setup() {
         navigate('/api-providers')
         return
       }
-      const msg = e.response?.data?.error || e.message || 'Failed to start. Try again.'
-      setError(msg)
+      setError(GENERATION_ERROR)
     } finally {
       clearInterval(msgInterval)
       setLoading(false)

@@ -52,6 +52,7 @@ func (p *GeminiProvider) GenerateQuestions(jobTitle, jobDescription string) ([]m
 	if err != nil {
 		return nil, err
 	}
+	raw = extractJSONObject(raw)
 
 	var result struct {
 		Questions []struct {
@@ -61,10 +62,13 @@ func (p *GeminiProvider) GenerateQuestions(jobTitle, jobDescription string) ([]m
 		} `json:"questions"`
 	}
 	if err := json.Unmarshal([]byte(raw), &result); err != nil {
-		return nil, fmt.Errorf("parse questions: %w — raw: %s", err, raw)
+		return nil, fmt.Errorf("parse questions: %w", err)
 	}
 
 	questions := make([]models.Question, len(result.Questions))
+	if len(result.Questions) == 0 {
+		return nil, fmt.Errorf("question response was empty")
+	}
 	for i, q := range result.Questions {
 		questions[i] = models.Question{ID: i + 1, Text: q.Text, Category: q.Category, Skill: q.Skill}
 	}
@@ -104,8 +108,9 @@ func (p *GeminiProvider) call(prompt string) (string, error) {
 			{"parts": []map[string]any{{"text": prompt}}},
 		},
 		"generationConfig": map[string]any{
-			"temperature":     0.3,
-			"maxOutputTokens": 1500,
+			"temperature":      0.3,
+			"maxOutputTokens":  1500,
+			"responseMimeType": "application/json",
 		},
 	}
 	payload, _ := json.Marshal(body)
@@ -175,7 +180,19 @@ func parseGeminiText(body []byte) (string, error) {
 	return strings.TrimSpace(text), nil
 }
 
+// extractJSONObject handles Markdown fences and incidental model prose.
+func extractJSONObject(text string) string {
+	text = strings.TrimSpace(text)
+	start := strings.Index(text, "{")
+	end := strings.LastIndex(text, "}")
+	if start >= 0 && end > start {
+		return text[start : end+1]
+	}
+	return text
+}
+
 func truncate(s string, n int) string {
+
 	if len(s) <= n {
 		return s
 	}

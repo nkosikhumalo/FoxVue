@@ -66,24 +66,26 @@ func (h *interviewHandler) generateQuestions(c *gin.Context) {
 		}
 	}
 
-	session := h.store.Create(req.JobDescription)
+	questions, err := provider.GenerateQuestions(req.JobTitle, req.JobDescription)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "We couldn't generate questions right now. Please try again.",
+			"code":  "QUESTION_GENERATION_FAILED",
+		})
+		return
+	}
 
+	// Only persist/count the session after generation succeeds. Failed AI calls
+	// therefore do not leave orphan sessions or consume the user's quota.
+	session := h.store.Create(req.JobDescription)
 	if uid != "" {
 		sid := session.ID
 		go func() {
-			// Link the session row (created by the store) to the authenticated user
-			// and set the job title — the store insert used nil user_id as a placeholder.
 			_ = h.sessions.LinkSession(sid, uid, req.JobTitle)
 			if !hasByok {
 				_ = h.quota.Increment(uid)
 			}
 		}()
-	}
-
-	questions, err := provider.GenerateQuestions(req.JobTitle, req.JobDescription)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate questions: " + err.Error()})
-		return
 	}
 
 	go func() {

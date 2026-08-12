@@ -1,0 +1,17 @@
+                      Table "public.interview_sessions"
+     Column      |           Type           | Collation | Nullable | Default  
+-----------------+--------------------------+-----------+----------+----------
+ id              | text                     |           | not null | 
+ user_id         | uuid                     |           |          | 
+ job_description | text                     |           | not null | ''::text
+ created_at      | timestamp with time zone |           | not null | now()
+ job_title       | text                     |           | not null | ''::text
+Indexes:
+    "interview_sessions_pkey" PRIMARY KEY, btree (id)
+    "idx_sessions_user" btree (user_id)
+Foreign-key constraints:
+    "interview_sessions_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "interview_answers" CONSTRAINT "interview_answers_session_id_fkey" FOREIGN KEY (session_id) REFERENCES interview_sessions(id) ON DELETE CASCADE
+    TABLE "session_questions" CONSTRAINT "session_questions_session_id_fkey" FOREIGN KEY (session_id) REFERENCES interview_sessions(id) ON DELETE CASCADE
+

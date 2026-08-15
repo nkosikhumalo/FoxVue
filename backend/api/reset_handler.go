@@ -127,32 +127,6 @@ func (h *resetHandler) resetPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Password updated successfully. You can now sign in."})
 }
 
-// POST /api/auth/test-email  — dev-only endpoint to verify SMTP config
-// Remove or protect this in production.
-func testEmail(c *gin.Context) {
-	var body struct {
-		To string `json:"to" binding:"required,email"`
-	}
-	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	log.Printf("[smtp-test] sending test email to %s", body.To)
-	err := email.SendPasswordReset(body.To, "Test User", "http://localhost:5173/reset-password?token=TEST_TOKEN")
-	if err != nil {
-		log.Printf("[smtp-test] FAILED: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":   "SMTP send failed",
-			"details": err.Error(),
-		})
-		return
-	}
-
-	log.Printf("[smtp-test] SUCCESS")
-	c.JSON(http.StatusOK, gin.H{"message": "Test email sent — check your inbox and spam folder."})
-}
-
 func generateSecureToken(n int) (string, error) {
 	b := make([]byte, n)
 	if _, err := rand.Read(b); err != nil {

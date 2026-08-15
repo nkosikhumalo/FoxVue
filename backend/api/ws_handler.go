@@ -55,7 +55,7 @@ func handleWebSocket(c *gin.Context) {
 		log.Printf("ws upgrade error: %v", err)
 		return
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	var jobDescription string
 
@@ -117,13 +117,5 @@ func writeWS(conn *websocket.Conn, msgType string, payload any) {
 	}
 }
 
-// notImplementedWebsocket is kept for reference but no longer used.
-func notImplementedWebsocket(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, gin.H{
-		"error": "use /api/ws instead",
-	})
-}
-
 // Ensure models import is used.
 var _ = models.Question{}
-

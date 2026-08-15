@@ -47,5 +47,7 @@ func main() {
 		port = "8080"
 	}
 	log.Printf("[main] server starting on :%s", port)
-	r.Run(":" + port)
+	if err := r.Run(":" + port); err != nil {
+		log.Fatalf("[main] server error: %v", err)
+	}
 }

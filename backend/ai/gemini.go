@@ -137,7 +137,7 @@ func (p *GeminiProvider) call(prompt string) (string, error) {
 			}
 
 			respBody, _ := io.ReadAll(resp.Body)
-			resp.Body.Close()
+			_ = resp.Body.Close()
 
 			if resp.StatusCode == http.StatusOK {
 				return parseGeminiText(respBody)

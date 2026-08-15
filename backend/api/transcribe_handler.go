@@ -47,11 +47,6 @@ func (h *transcribeHandler) resolveKeys(c *gin.Context) []string {
 	return append([]string{userKey}, platformKeys...)
 }
 
-// resolveGeminiKeys is kept for backward compatibility but unused directly.
-func resolveGeminiKeys(_ *gin.Context) []string {
-	return getGeminiKeys()
-}
-
 // POST /api/transcribe
 func (h *transcribeHandler) transcribeAudio(c *gin.Context) {
 	file, header, err := c.Request.FormFile("audio")
@@ -59,7 +54,7 @@ func (h *transcribeHandler) transcribeAudio(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "missing audio file"})
 		return
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	if header.Size > 25*1024*1024 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "audio file too large (max 25 MB)"})
@@ -142,7 +137,7 @@ func transcribeWithKeys(audioBytes []byte, mimeType string, keys []string) (stri
 			}
 
 			respBody, _ := io.ReadAll(resp.Body)
-			resp.Body.Close()
+			_ = resp.Body.Close()
 
 			if resp.StatusCode == http.StatusServiceUnavailable {
 				lastErr = fmt.Errorf("gemini overloaded")

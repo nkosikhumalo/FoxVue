@@ -30,10 +30,10 @@ type EvaluateAnswerRequest struct {
 
 // EvaluationResult is the rich AI feedback returned per answer.
 type EvaluationResult struct {
-	Score          int      `json:"score"`           // 0-10
-	Clarity        int      `json:"clarity"`         // 0-10
-	TechnicalScore int      `json:"technicalScore"`  // 0-10
-	Communication  int      `json:"communication"`   // 0-10
+	Score          int      `json:"score"`          // 0-10
+	Clarity        int      `json:"clarity"`        // 0-10
+	TechnicalScore int      `json:"technicalScore"` // 0-10
+	Communication  int      `json:"communication"`  // 0-10
 	Strengths      []string `json:"strengths"`
 	Weaknesses     []string `json:"weaknesses"`
 	SampleAnswer   string   `json:"sampleAnswer"`

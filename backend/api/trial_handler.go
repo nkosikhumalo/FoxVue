@@ -3,8 +3,9 @@ package api
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"foxvue-api/db"
+
+	"github.com/gin-gonic/gin"
 )
 
 type trialHandler struct {
@@ -26,9 +27,9 @@ func (h *trialHandler) status(c *gin.Context) {
 		trial, err := h.trials.GetByIP(clientIP)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
-				"hasTrialCookie":  false,
-				"triesRemaining":  db.TrialMaxTries,
-				"trialExhausted":  false,
+				"hasTrialCookie": false,
+				"triesRemaining": db.TrialMaxTries,
+				"trialExhausted": false,
 			})
 			return
 		}

@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/jmoiron/sqlx"
 	"foxvue-api/models"
+
+	"github.com/jmoiron/sqlx"
 )
 
 // ErrNotFound is returned when a record doesn't exist.

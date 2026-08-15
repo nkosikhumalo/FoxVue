@@ -350,7 +350,7 @@ func (h *authHandler) me(c *gin.Context) {
 // validatePassword enforces: min 8 chars, at least one uppercase, one digit, one symbol.
 func validatePassword(pw string) error {
 	if len(pw) < 8 {
-		return fmt.Errorf("Password must be at least 8 characters.")
+		return fmt.Errorf("password must be at least 8 characters")
 	}
 	var hasUpper, hasDigit, hasSymbol bool
 	for _, r := range pw {
@@ -364,13 +364,13 @@ func validatePassword(pw string) error {
 		}
 	}
 	if !hasUpper {
-		return fmt.Errorf("Password must contain at least one uppercase letter.")
+		return fmt.Errorf("password must contain at least one uppercase letter")
 	}
 	if !hasDigit {
-		return fmt.Errorf("Password must contain at least one number.")
+		return fmt.Errorf("password must contain at least one number")
 	}
 	if !hasSymbol {
-		return fmt.Errorf("Password must contain at least one symbol (e.g. !@#$).")
+		return fmt.Errorf("password must contain at least one symbol (e.g. !@#$)")
 	}
 	return nil
 }

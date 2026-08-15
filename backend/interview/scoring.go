@@ -111,4 +111,3 @@ func buildSummary(score int, totalFillers int, counts map[string]int, star strin
 	// Default.
 	return "Solid response. Refine clarity and reduce filler words to improve interview impact."
 }
-

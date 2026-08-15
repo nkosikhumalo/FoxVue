@@ -11,4 +11,3 @@ package speech
 func TranslateToEnglish(transcript string, sourceLang string) (string, error) {
 	return transcript, nil
 }
-

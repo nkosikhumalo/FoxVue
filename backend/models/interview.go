@@ -58,4 +58,3 @@ type SessionSummary struct {
 	CreatedAt      time.Time      `json:"createdAt"`
 	History        []HistoryEntry `json:"history"`
 }
-

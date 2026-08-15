@@ -3,8 +3,9 @@ package api
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"foxvue-api/db"
+
+	"github.com/gin-gonic/gin"
 )
 
 type quotaHandler struct {

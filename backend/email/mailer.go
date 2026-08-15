@@ -106,7 +106,7 @@ func sendWithSTARTTLS(cfg *Config, to, msg string) error {
 	if err != nil {
 		return fmt.Errorf("SMTP client creation failed: %w", err)
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// Upgrade to TLS via STARTTLS
 	tlsCfg := &tls.Config{
@@ -152,9 +152,9 @@ func buildMIME(from, to, subject, htmlBody string) string {
 	var sb strings.Builder
 	sb.WriteString("MIME-Version: 1.0\r\n")
 	sb.WriteString("Content-Type: text/html; charset=\"UTF-8\"\r\n")
-	sb.WriteString(fmt.Sprintf("From: FoxVue <%s>\r\n", from))
-	sb.WriteString(fmt.Sprintf("To: %s\r\n", to))
-	sb.WriteString(fmt.Sprintf("Subject: %s\r\n", subject))
+	fmt.Fprintf(&sb, "From: FoxVue <%s>\r\n", from)
+	fmt.Fprintf(&sb, "To: %s\r\n", to)
+	fmt.Fprintf(&sb, "Subject: %s\r\n", subject)
 	sb.WriteString("\r\n")
 	sb.WriteString(htmlBody)
 	return sb.String()

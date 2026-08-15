@@ -19,14 +19,14 @@ import (
 
 // UserAPIKey is the DB row shape (encrypted_key is never sent to frontend).
 type UserAPIKey struct {
-	ID           string    `db:"id"            json:"id"`
-	UserID       string    `db:"user_id"       json:"-"`
-	Provider     string    `db:"provider"      json:"provider"`
-	KeyHint      string    `db:"key_hint"      json:"keyHint"`   // e.g. "****ab12"
-	IsActive     bool      `db:"is_active"     json:"isActive"`
-	Status       string    `db:"status"        json:"status"`
-	CreatedAt    time.Time `db:"created_at"    json:"createdAt"`
-	UpdatedAt    time.Time `db:"updated_at"    json:"updatedAt"`
+	ID        string    `db:"id"            json:"id"`
+	UserID    string    `db:"user_id"       json:"-"`
+	Provider  string    `db:"provider"      json:"provider"`
+	KeyHint   string    `db:"key_hint"      json:"keyHint"` // e.g. "****ab12"
+	IsActive  bool      `db:"is_active"     json:"isActive"`
+	Status    string    `db:"status"        json:"status"`
+	CreatedAt time.Time `db:"created_at"    json:"createdAt"`
+	UpdatedAt time.Time `db:"updated_at"    json:"updatedAt"`
 }
 
 type APIKeyRepo struct {
@@ -85,7 +85,7 @@ func (r *APIKeyRepo) SetActive(userID, keyID string) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	_, err = tx.Exec(`UPDATE user_api_keys SET is_active = FALSE WHERE user_id = $1`, userID)
 	if err != nil {
@@ -134,7 +134,7 @@ func (r *APIKeyRepo) GetActiveProvider(userID string) (string, error) {
 		LIMIT 1`,
 		userID,
 	)
-	if errors.Is(err, sqlxNoRows) {
+	if errors.Is(err, errSQLNoRows) {
 		return "", nil
 	}
 	return provider, err
@@ -160,7 +160,7 @@ func (r *APIKeyRepo) GetDecryptedByID(userID, keyID string) (string, string, err
 
 // ── AES-256-GCM helpers ───────────────────────────────────────────────────────
 
-var sqlxNoRows = fmt.Errorf("sql: no rows in result set")
+var errSQLNoRows = fmt.Errorf("sql: no rows in result set")
 
 func encryptionKey() ([]byte, error) {
 	secret := os.Getenv("API_KEY_ENCRYPTION_SECRET")

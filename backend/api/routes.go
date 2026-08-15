@@ -38,6 +38,7 @@ func RegisterRoutes(r *gin.Engine, store storage.SessionStore, database *db.DB) 
 	r.POST("/api/auth/reset-password", resetH.resetPassword)
 
 	r.GET("/api/trial/status", trialH.status)
+	r.GET("/api/question", getQuestion)
 
 	// ── OAuth ────────────────────────────────────────────────────────────────
 	r.GET("/auth/:provider", oauthH.redirect)

@@ -10,11 +10,9 @@ import (
 	"foxvue-api/models"
 )
 
-var seedRand = rand.Intn(1000)
-
-func init() {
-	rand.Seed(int64(seedRand))
-}
+// rng is a package-level random source. As of Go 1.20 the global rand is
+// automatically seeded — no need to call rand.Seed manually.
+var rng = rand.New(rand.NewSource(rand.Int63()))
 
 // NextQuestion returns a question candidate based on job description context.
 // This is a simple heuristic implementation; later you can replace it with
@@ -53,6 +51,5 @@ func NextQuestion(jobDescription string) *models.Question {
 		candidates = all
 	}
 
-	return candidates[rand.Intn(len(candidates))]
+	return candidates[rng.Intn(len(candidates))]
 }
-

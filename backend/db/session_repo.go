@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	"foxvue-api/models"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type SessionRepo struct {
@@ -63,7 +64,7 @@ func (r *SessionRepo) GetQuestions(sessionID string) ([]models.Question, error) 
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var questions []models.Question
 	for rows.Next() {
@@ -112,15 +113,15 @@ func (r *SessionRepo) GetSessionHistory(sessionID string) ([]models.HistoryEntry
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var entries []models.HistoryEntry
 	for rows.Next() {
 		var (
-			qID, score                         int
-			qText, qCat, qSkill, transcript    string
-			star, summary, fillerRaw           string
-			answeredAt                         time.Time
+			qID, score                      int
+			qText, qCat, qSkill, transcript string
+			star, summary, fillerRaw        string
+			answeredAt                      time.Time
 		)
 		if err := rows.Scan(&qID, &qText, &qCat, &qSkill, &transcript,
 			&score, &star, &summary, &fillerRaw, &answeredAt); err != nil {
@@ -160,7 +161,7 @@ func (r *SessionRepo) GetAllSessions(userID string) ([]map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sessions []map[string]any
 	for rows.Next() {
